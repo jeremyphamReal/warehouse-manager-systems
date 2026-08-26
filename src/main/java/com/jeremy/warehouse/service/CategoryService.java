@@ -9,6 +9,7 @@ import java.util.List;
 
 @Service
 public class CategoryService {
+    @Autowired
     private CategoryRepo repo;
 
     public CategoryRepo getRepo() {
@@ -20,11 +21,22 @@ public class CategoryService {
         this.repo = repo;
     }
 
-    public void add(Category category){
-        repo.save(category);
+    public Category add(Category category){
+        return repo.save(category);
     }
 
     public List<Category> getCategory(){
         return repo.findAll();
     }
+
+    public Category getCategoryById(Long id) {
+        return repo.findById(id).orElse(new  Category());
+    }
+
+    public Category deleteById(Long id) {
+        Category category = repo.findById(id).orElse(new  Category());
+        repo.delete(category);
+        return category;
+    }
+
 }

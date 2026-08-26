@@ -5,7 +5,6 @@ import com.jeremy.warehouse.repository.UserRepo;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.stereotype.Service;
-import org.springframework.web.bind.annotation.RequestBody;
 
 import java.util.List;
 
@@ -15,13 +14,13 @@ public class UserService {
     private UserRepo repo;
     private BCryptPasswordEncoder bCryptPasswordEncoder = new BCryptPasswordEncoder(10);
 
-    public User save(@RequestBody User user) {
+    public User save(User user) {
         user.setPassword(bCryptPasswordEncoder.encode(user.getPassword()));
         return repo.save(user);
     }
 
     public List<User> findAllStaff() {
-        List<User> staff= repo.findByRole("STAFF");
+        List<User> staff= repo.findByRole("staff");
         if(staff.isEmpty()){
             throw new RuntimeException("Không tìm thấy danh sách staff trong hệ thống");
         }
@@ -34,10 +33,12 @@ public class UserService {
 
     public User update(Long id, User user) {
         User existingUser = repo.findById(id).orElseThrow(() -> new RuntimeException("User not found"));
-        if(existingUser.getPassword()!=null && existingUser.getPassword().isEmpty()){
-            existingUser.setPassword(user.getPassword());
+        if (user.getPassword() != null && !user.getPassword().isBlank()) {
+            existingUser.setPassword(bCryptPasswordEncoder.encode(user.getPassword()));
         }
-        existingUser.setRole(user.getRole());
+        if (user.getRole() != null && !user.getRole().isBlank()) {
+            existingUser.setRole(user.getRole());
+        }
         return repo.save(existingUser);
     }
 }

@@ -38,8 +38,8 @@ public class SecurityConfig {
         http.sessionManagement(session->session.sessionCreationPolicy(SessionCreationPolicy.STATELESS));
 
         http.authorizeHttpRequests(
-                requests -> requests.requestMatchers("user/register")
-                        .hasRole("admin")
+                requests -> requests.requestMatchers("/api/users/admin/**")
+                        .hasRole("ADMIN")
                         .anyRequest()
                         .authenticated());
         return http.build();

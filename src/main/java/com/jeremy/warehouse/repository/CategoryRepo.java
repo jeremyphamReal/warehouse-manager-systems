@@ -10,6 +10,9 @@ import java.util.List;
 
 @Repository
 public interface CategoryRepo extends JpaRepository<Category,Long> {
+
+
+    //Thành phần tương tác cũ trong việc học Udemy
 //    private JdbcTemplate jdbc;
 //
 //    public JdbcTemplate getJdbc() {
@@ -50,5 +53,4 @@ public interface CategoryRepo extends JpaRepository<Category,Long> {
 //        System.out.println(rows);
 //        return rows;
 //    }
-
 }
