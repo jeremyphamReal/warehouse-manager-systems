@@ -33,6 +33,7 @@ public class ProductService {
     }
 
     public Product addProduct(Product product) throws NullPointerException {
+        product.setId(null);
         //addProduct(request):
         // 0. Kiểm tra product truyền vào có rỗng hay không
         if(product == null){
@@ -45,12 +46,10 @@ public class ProductService {
             throw new IllegalArgumentException("Category id is null");
         }
         Category category = categoryRepo.findById(product.getCategory()
-                .getId())
+                        .getId())
                 .orElseThrow(() -> new IllegalArgumentException("Category id is null"));
         product.setCategory(categoryRepo.save(category));
         //  3. set id = null, createAt/updateAt = now
-        if(product.getId()==null)
-            product.setId(null);
         Date now = new Date();
         product.setCreateAt(now);
         product.setUpdateAt(now);
@@ -61,6 +60,17 @@ public class ProductService {
             product.setStatus(1);
         //  5. save và trả về
         return repo.save(product);
+    }
+
+    public boolean deleteProduct(Long id) {
+        //Tim product dua vao id
+        //Kiem tra neu tim thay se xoa
+        //      -neu khong -> loi
+        Product product = repo.findById(id).orElse(null);
+        if(product == null)
+            return false;
+        repo.delete(product);
+        return true;
     }
 
 
@@ -96,23 +106,20 @@ public class ProductService {
 //        return repo.save(product);
 //    }
 
-//    public Product updateProduct(Long id, Product product) {
-//        Product existingProduct = repo.findById(id)
-//                .orElseThrow(() -> new RuntimeException("Product not found with id: " + id));
-//
-//        existingProduct.setName(product.getName());
-//        existingProduct.setSku(product.getSku());
-//        existingProduct.setPrice(product.getPrice());
-//        if (product.getQuantity() != null) {
-//            existingProduct.setQuantity(product.getQuantity());
-//        }
-//        existingProduct.setDescription(product.getDescription());
-//        existingProduct.setCategoryId(product.getCategoryId());
-//        if (product.getStatus() != null) {
-//            existingProduct.setStatus(product.getStatus());
-//        }
-//        existingProduct.setUpdateAt(new Date());
-//
-//        return repo.save(existingProduct);
-//    }
+    public Product updateProduct(Long id, Product product) {
+        Product existingProduct = repo.findById(id)
+                .orElseThrow(() -> new RuntimeException("Product not found with id: " + id));
+        if (product.getCategory() != null && product.getCategory().getId() != null) {
+            Category category = categoryRepo.findById(product.getCategory().getId())
+                    .orElseThrow(() -> new IllegalArgumentException("Category không tồn tại"));
+            existingProduct.setCategory(category);
+        }
+
+        if(product.getName()!=null) existingProduct.setName(product.getName());
+        if(product.getDescription()!=null) existingProduct.setDescription(product.getDescription());
+        if(product.getSku()!=null) existingProduct.setSku(product.getSku());
+        if (product.getStatus() != null) existingProduct.setStatus(product.getStatus());
+
+        return repo.save(existingProduct);
+    }
 }
