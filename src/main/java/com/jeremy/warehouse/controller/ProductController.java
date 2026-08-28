@@ -38,7 +38,7 @@ public class ProductController {
     }
 
     //TODO: Hien thi danh sach product dua vao category
-    @GetMapping("/product/list/{Id}")
+    @GetMapping("/list/{Id}")
     @PreAuthorize("hasAnyRole('STAFF', 'ADMIN')")
     public ResponseEntity<List<Product>> getAllProductInCategory(@PathVariable("Id") Long id){
         List<Product> productList = service.getCategoryIdFromProduct(id);
@@ -47,17 +47,25 @@ public class ProductController {
         }
         return new ResponseEntity<>(productList, HttpStatus.OK);
     }
-    //TODO: Xoa mot product trong category
+    //TODO: Xoa mot product
+    @DeleteMapping("/delete/{id}")
+    @PreAuthorize("hasRole('ADMIN')")
+    public ResponseEntity<Product> deleteProductById(@PathVariable Long id){
+        if(service.deleteProduct(id))
+            return new ResponseEntity<>(HttpStatus.OK);
+        return new ResponseEntity<>(HttpStatus.BAD_REQUEST);
+    }
     //TODO: Sua mot product trong category
-//    @PutMapping("/update/{id}")
-//    public ResponseEntity<?> updateProduct(@PathVariable Long id, @RequestBody Product product) {
-//        try {
-//            Product updatedProduct = service.updateProduct(id, product);
-//            return new ResponseEntity<>(updatedProduct, HttpStatus.OK);
-//        } catch (RuntimeException e) {
-//            return new ResponseEntity<>(e.getMessage(), HttpStatus.NOT_FOUND);
-//        }
-//    }
+    @PutMapping("/update/{id}")
+    @PreAuthorize("hasRole('ADMIN')")
+    public ResponseEntity<?> updateProduct(@PathVariable Long id, @RequestBody Product product) {
+        try {
+            Product updatedProduct = service.updateProduct(id, product);
+            return new ResponseEntity<>(updatedProduct, HttpStatus.OK);
+        } catch (RuntimeException e) {
+            return new ResponseEntity<>(e.getMessage(), HttpStatus.NOT_FOUND);
+        }
+    }
 //
 //    @DeleteMapping("/delete/{id}")
 //    public ResponseEntity<String> deletedProduct(@PathVariable Long id){
