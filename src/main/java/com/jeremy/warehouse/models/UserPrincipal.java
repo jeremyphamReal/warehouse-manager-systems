@@ -15,6 +15,7 @@ public class UserPrincipal implements UserDetails {
         this.user = user;
     }
 
+
     @Override
     public Collection<? extends GrantedAuthority> getAuthorities() {
         String role = user.getRole();
@@ -30,6 +31,7 @@ public class UserPrincipal implements UserDetails {
         return List.of(new SimpleGrantedAuthority(normalizedRole));
     }
 
+    public @Nullable Long getId(){return user.getId();}
     @Override
     public @Nullable String getPassword() {
         return user.getPassword();
