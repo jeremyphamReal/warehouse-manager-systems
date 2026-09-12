@@ -1,5 +1,6 @@
 package com.jeremy.warehouse.controller;
 
+import com.jeremy.warehouse.models.DTO.StockTransactionRequest;
 import com.jeremy.warehouse.models.StockTrans.StockTransaction;
 import com.jeremy.warehouse.models.StockTrans.StockTransactionType;
 import com.jeremy.warehouse.models.UserPrincipal;
@@ -21,14 +22,12 @@ public class StockTransactionController {
 
         @PostMapping("/transaction")
         public ResponseEntity<?> createTransaction(
-                @RequestParam Long productId,
-                @RequestParam StockTransactionType type,
-                @RequestParam int quantity,
+                @RequestBody StockTransactionRequest request,
                 @AuthenticationPrincipal UserPrincipal currentUser) {
 
             try {
                 StockTransaction transaction = stockService.createStockTranscationWithRetry(
-                        productId, type, quantity, currentUser.getId()
+                        request.productId(), request.stockTransactionType(), request.quantityChange(), currentUser.getId()
                 );
                 return ResponseEntity.ok(transaction);
             } catch (IllegalStateException e) {
