@@ -10,7 +10,9 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.*;
 
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
 @RestController
 @RequestMapping("/api/category")
@@ -38,8 +40,9 @@ public class CategoryController {
     //TODO: Xoa mot category dua theo ma
     @DeleteMapping("/delete/{Id}")
     @PreAuthorize("hasRole('ADMIN')")
-    public ResponseEntity<Category> deleteById(@PathVariable("Id") Long id){
-        return new ResponseEntity<>(service.deleteById(id),HttpStatus.OK);
+    public ResponseEntity<Void> deleteById(@PathVariable("Id") Long id){
+        service.deleteCategoryById(id);
+        return ResponseEntity.noContent().build();
     }
     //TODO: Them moi mot category
     @PostMapping("/add")
