@@ -4,11 +4,10 @@ import com.jeremy.warehouse.models.Category;
 import com.jeremy.warehouse.models.Product;
 import com.jeremy.warehouse.repository.CategoryRepo;
 import com.jeremy.warehouse.repository.ProductRepo;
+import com.jeremy.warehouse.repository.StockTransactionRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
-import org.springframework.web.bind.annotation.ExceptionHandler;
 
-import java.io.IOException;
 import java.util.Date;
 import java.util.List;
 
@@ -19,6 +18,8 @@ public class ProductService {
     private ProductRepo repo;
     @Autowired
     private CategoryRepo categoryRepo;
+    @Autowired
+    private StockTransactionRepository stockTransactionRepository;
 
     public List<Product> getAllProduct() {
         return repo.findAll();
@@ -33,7 +34,6 @@ public class ProductService {
     }
 
     public Product addProduct(Product product) throws NullPointerException {
-        product.setId(null);
         //addProduct(request):
         // 0. Kiểm tra product truyền vào có rỗng hay không
         if(product == null){
@@ -42,14 +42,15 @@ public class ProductService {
         //  1. Tìm Category theo categoryId trong request
         //     - nếu không thấy → ném lỗi rõ ràng (404 "category không tồn tại")
         //  2. Tạo Product mới, set category vừa tìm được (không tin category client gửi lên)
-        if(product.getCategory().getId()==null || product.getCategory()==null){
+        if(product.getCategory()==null || product.getCategory().getId()==null){
             throw new IllegalArgumentException("Category id is null");
         }
         Category category = categoryRepo.findById(product.getCategory()
                         .getId())
-                .orElseThrow(() -> new IllegalArgumentException("Category id is null"));
-        product.setCategory(categoryRepo.save(category));
+                .orElseThrow(() -> new IllegalArgumentException("Category id not found"));
+//        product.setCategory(categoryRepo.save(category));
         //  3. set id = null, createAt/updateAt = now
+        product.setId(null);
         Date now = new Date();
         product.setCreateAt(now);
         product.setUpdateAt(now);
@@ -62,15 +63,15 @@ public class ProductService {
         return repo.save(product);
     }
 
-    public boolean deleteProduct(Long id) {
+    public void deleteProduct(Long id) {
         //Tim product dua vao id
         //Kiem tra neu tim thay se xoa
         //      -neu khong -> loi
-        Product product = repo.findById(id).orElse(null);
-        if(product == null)
-            return false;
+        Product product = repo.findById(id).orElseThrow(() -> new IllegalArgumentException("Product id not found"));
+        if (stockTransactionRepository.existsByProductId(product.getId())) {
+            throw new IllegalStateException("Product has stock transactions and cannot be deleted");
+        }
         repo.delete(product);
-        return true;
     }
 
 
@@ -111,13 +112,16 @@ public class ProductService {
                 .orElseThrow(() -> new RuntimeException("Product not found with id: " + id));
         if (product.getCategory() != null && product.getCategory().getId() != null) {
             Category category = categoryRepo.findById(product.getCategory().getId())
-                    .orElseThrow(() -> new IllegalArgumentException("Category không tồn tại"));
+                    .orElseThrow(() -> new IllegalArgumentException("Category is not exists"));
             existingProduct.setCategory(category);
+        }
+        if(product.getSku()!=null && !product.getSku().equals(existingProduct.getSku())){
+            throw new IllegalArgumentException("Sku already exists");
         }
 
         if(product.getName()!=null) existingProduct.setName(product.getName());
         if(product.getDescription()!=null) existingProduct.setDescription(product.getDescription());
-        if(product.getSku()!=null) existingProduct.setSku(product.getSku());
+        if(product.getPrice()!=null) existingProduct.setPrice(product.getPrice());
         if (product.getStatus() != null) existingProduct.setStatus(product.getStatus());
 
         return repo.save(existingProduct);
