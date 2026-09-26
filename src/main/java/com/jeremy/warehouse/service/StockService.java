@@ -11,6 +11,7 @@ import com.jeremy.warehouse.repository.UserRepo;
 import jakarta.persistence.OptimisticLockException;
 import jakarta.transaction.Transactional;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.orm.ObjectOptimisticLockingFailureException;
 import org.springframework.security.core.annotation.AuthenticationPrincipal;
 import org.springframework.stereotype.Service;
 
@@ -38,24 +39,33 @@ public class StockService {
 
         // 1. Lấy product với pessimistic lock (khóa dữ liệu)
         Product product = productRepo.findByIdWithLock(productId)
-                .orElseThrow(() -> new IllegalArgumentException("Product không tồn tại"));
+                .orElseThrow(() -> new IllegalArgumentException("Product is not exists"));
+        User user = userRepo.findById(userId)
+                .orElseThrow(() -> new IllegalArgumentException("User is not exists"));
 
         // 2. Kiểm tra và cập nhật quantity
         int oldQuantity = product.getQuantity();
-        int newQuantity;
+        int newQuantity = 0;
 
         if (type == StockTransactionType.OUT) {
             // Kiểm tra tồn kho
             if (product.getQuantity() < quantityChange) {
                 throw new IllegalStateException(
-                        String.format("Không đủ tồn kho. Hiện có: %d, Yêu cầu: %d",
+                        String.format("Not enough in Basement. NOW: %d, REQUEST: %d",
                                 product.getQuantity(), quantityChange)
                 );
             }
+            if(quantityChange < 0){
+                throw new IllegalArgumentException("Input quantity cannot be less than 0");
+            }
             newQuantity = type.calculateQuantity(oldQuantity,  quantityChange);
-        } else {
+        } else if(type == StockTransactionType.IN) {
+            if(quantityChange < 0){
+                throw new IllegalArgumentException("Input quantity cannot be less than 0");
+            }
             newQuantity = type.calculateQuantity(oldQuantity, quantityChange);
         }
+
 
         // 3. Cập nhật quantity
         product.setQuantity(newQuantity);
@@ -64,15 +74,13 @@ public class StockService {
         Product savedProduct = productRepo.save(product);
 
         // 5. Tạo transaction record
-        User user = userRepo.findById(userId)
-                .orElseThrow(() -> new IllegalArgumentException("User không tồn tại"));
-
+//        User user = userRepo.findById(userId)
+//                .orElseThrow(() -> new IllegalArgumentException("User is not exists"));
         StockTransaction transaction = new StockTransaction();
         transaction.setProduct(savedProduct);
         transaction.setType(type);
         transaction.setQuantityChange(quantityChange);
 
-        productRepo.save(savedProduct);
 
         transaction.setQuantityBefore(oldQuantity); // Lưu lại số lượng trước
         transaction.setQuantityAfter(newQuantity); // Lưu lại số lượng sau
@@ -89,10 +97,13 @@ public class StockService {
         while (retryCount < MAX_RETRIES) {
             try{
                 return createStockTransaction(productId, type, quantityChange, userId);
-            }catch (OptimisticLockException e){
+            }catch (ObjectOptimisticLockingFailureException e){
                 retryCount++;
                 if(retryCount == MAX_RETRIES){
-                    throw new IllegalArgumentException("Hệ thống đang bận vui lòng thử lại sau. Lỗi:" +  e.getMessage());
+                    throw new IllegalStateException(String.format(
+                            "Không thể xử lý giao dịch sau %d lần thử do xung đột dữ liệu. Lỗi gốc: %s",
+                            MAX_RETRIES, e.getMessage()
+                    ), e);
                 }
                 try {
                     Thread.sleep(100);

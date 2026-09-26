@@ -14,6 +14,7 @@ import org.springframework.stereotype.Component;
 @Getter
 @Setter
 @Component
+@Builder
 public class User {
     @Id
     private Long id;

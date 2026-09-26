@@ -17,6 +17,7 @@ import java.time.LocalDateTime;
 @Component
 @Data
 @Table(name="Stock_Trans", schema = "public")
+@Builder
 public class StockTransaction {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)

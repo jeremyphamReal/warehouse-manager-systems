@@ -11,6 +11,8 @@ import java.util.List;
 
 @Repository
 public interface StockTransactionRepository extends JpaRepository<StockTransaction, Long> {
+    boolean existsByProductId(Long productId);
+
     // Tìm theo type
     List<StockTransaction> findByType(StockTransactionType type);
 
