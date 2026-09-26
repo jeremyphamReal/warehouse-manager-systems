@@ -55,7 +55,7 @@ public class CategoryService {
         //2. tìm danh sách product có categoryId == id được gán vào để tìm
 //        List<Product> productList = productRepo.findByCategoryId(category.getId());
         //3. kiểm tra danh sách xem nếu danh sách product == rỗng -> cho phép xóa category
-        if(!productRepo.existsById(category.getId())){
+        if(productRepo.existsByCategoryId(category.getId())){
             throw new IllegalStateException("Category have product can not be deleted");
         }
         repo.deleteById(id);

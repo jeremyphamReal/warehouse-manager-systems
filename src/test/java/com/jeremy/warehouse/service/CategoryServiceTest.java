@@ -67,7 +67,7 @@ public class CategoryServiceTest {
         Category category = Category.builder().id(existId).name("Electronic").build();
 
         when(categoryRepo.findById(existId)).thenReturn(Optional.of(category));
-        when(productRepo.findByCategoryId(existId)).thenReturn(List.of());
+        when(productRepo.existsByCategoryId(existId)).thenReturn(false);
 
         categoryService.deleteCategoryById(existId);
         Mockito.verify(categoryRepo, Mockito.times(1)).deleteById(existId);
@@ -81,7 +81,7 @@ public class CategoryServiceTest {
         Product product = new Product();
 
         when(categoryRepo.findById(categoryId)).thenReturn(Optional.of(category));
-        when(productRepo.findByCategoryId(categoryId)).thenReturn(List.of(product));
+        when(productRepo.existsByCategoryId(categoryId)).thenReturn(true);
 
         IllegalStateException exception = Assertions.assertThrows(
                 IllegalStateException.class,
