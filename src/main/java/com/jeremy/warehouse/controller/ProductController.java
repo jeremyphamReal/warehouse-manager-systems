@@ -50,10 +50,9 @@ public class ProductController {
     //TODO: Xoa mot product
     @DeleteMapping("/delete/{id}")
     @PreAuthorize("hasRole('ADMIN')")
-    public ResponseEntity<Product> deleteProductById(@PathVariable Long id){
-        if(service.deleteProduct(id))
-            return new ResponseEntity<>(HttpStatus.OK);
-        return new ResponseEntity<>(HttpStatus.BAD_REQUEST);
+    public ResponseEntity<Void> deleteProductById(@PathVariable Long id){
+       service.deleteProduct(id);
+       return ResponseEntity.noContent().build();
     }
     //TODO: Sua mot product trong category
     @PutMapping("/update/{id}")

@@ -16,6 +16,7 @@ import java.util.Date;
 @Getter
 @Setter
 @Component
+@Builder
 public class Product {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
