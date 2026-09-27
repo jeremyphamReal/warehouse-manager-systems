@@ -95,7 +95,7 @@ public class StockServiceTest {
         when(productRepo.findByIdWithLock(productId)).thenReturn(Optional.of(existingProduct));
         when(userRepo.findById(userId)).thenReturn(Optional.of(existingUser));
 
-        IllegalArgumentException exception = Assertions.assertThrows(IllegalArgumentException.class, () -> {
+        IllegalStateException exception = Assertions.assertThrows(IllegalStateException.class, () -> {
             stockService.createStockTransaction(productId, type, quantityChange, userId);
         });
 
@@ -321,7 +321,7 @@ public class StockServiceTest {
                 .thenThrow(new ObjectOptimisticLockingFailureException(Product.class, productId));
 
 
-        IllegalArgumentException exception = Assertions.assertThrows(IllegalArgumentException.class, () -> {
+        IllegalStateException exception = Assertions.assertThrows(IllegalStateException.class, () -> {
             stockService.createStockTranscationWithRetry(productId, StockTransactionType.IN, quantityChange, userId);
         });
 

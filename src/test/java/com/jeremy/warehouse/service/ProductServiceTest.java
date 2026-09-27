@@ -71,9 +71,6 @@ public class ProductServiceTest {
     @Test
     public void addProduct_shouldThrow_whenCategoryIdNotExists(){
         Category requestCategory = Category.builder().id(9L).build();
-        Category existingCategory = Category.builder()
-                .id(1L)
-                .build();
         Product newProduct = Product.builder()
                 .name("Electronic Bridge AI")
                 .sku("SKU-BB-023")
@@ -83,27 +80,14 @@ public class ProductServiceTest {
                 .category(requestCategory)
                 .build();
 
-        when(categoryRepo.findById(anyLong())).thenReturn(Optional.empty());
+        when(categoryRepo.findById(9L)).thenReturn(Optional.empty());
         IllegalArgumentException ex = assertThrows(IllegalArgumentException.class,
                 () -> productService.addProduct(newProduct));
-        when(productRepo.save(any(Product.class))).thenAnswer(invocation -> {
-            Product productToSave = invocation.getArgument(0);
-            productToSave.setId(100L);
-            return productToSave;
-        });
 
-        Product savedProduct = productService.addProduct(newProduct);
+        assertEquals("Category id not found", ex.getMessage());
 
-        assertNotNull(savedProduct);
-        assertEquals(100L, savedProduct.getId());
-        assertEquals(existingCategory, savedProduct.getCategory());
-        assertEquals("Electronic Bridge AI", savedProduct.getName());
-        assertNotNull(savedProduct.getCreateAt());
-        assertNotNull(savedProduct.getUpdateAt());
-        assertEquals(19, savedProduct.getQuantity());
-        assertEquals(1, savedProduct.getStatus());
-        verify(categoryRepo).findById(anyLong());
-        verify(productRepo).save(any(Product.class));
+        verify(categoryRepo).findById(9L);
+        verify(productRepo, never()).save(any(Product.class));
     }
 
     //TODO: xoa product that bai khi KHONG tim thay id -> throw exception
@@ -215,8 +199,8 @@ public class ProductServiceTest {
 
         when(productRepo.findById(productId)).thenReturn(Optional.empty());
 
-        IllegalStateException exception = assertThrows(
-                IllegalStateException.class,
+        IllegalArgumentException exception = assertThrows(
+                IllegalArgumentException.class,
                 () -> productService.updateProduct(productId, updateRequest)
         );
 

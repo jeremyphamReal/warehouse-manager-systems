@@ -109,7 +109,7 @@ public class ProductService {
 
     public Product updateProduct(Long id, Product product) {
         Product existingProduct = repo.findById(id)
-                .orElseThrow(() -> new RuntimeException("Product not found with id: " + id));
+                .orElseThrow(() -> new IllegalArgumentException("Product not found with id: " + id));
         if (product.getCategory() != null && product.getCategory().getId() != null) {
             Category category = categoryRepo.findById(product.getCategory().getId())
                     .orElseThrow(() -> new IllegalArgumentException("Category is not exists"));
