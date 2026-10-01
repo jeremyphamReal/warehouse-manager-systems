@@ -2,7 +2,7 @@ package com.jeremy.warehouse.controller;
 
 import com.jeremy.warehouse.models.StockTrans.StockTransaction;
 import com.jeremy.warehouse.models.StockTrans.StockTransactionType;
-import com.jeremy.warehouse.models.UserPrincipal;
+import com.jeremy.warehouse.models.User.UserPrincipal;
 import com.jeremy.warehouse.service.StockService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;

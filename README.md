@@ -112,9 +112,8 @@ This two-layer approach protects the same data from two different kinds of concu
 **4. Optimistic lock conflict (409)**
 `[screenshot: Postman response for a version conflict]`
 
-**5. Unit tests passing**
-`[screenshot: IntelliJ test run panel, all green]`
-
+**5. Unit tests passing — Category, Product, and Stock services (23 tests)**
+![Unit tests passing](./screenshots/unit-tests-passing.png)
 ---
 
 ## Running Locally

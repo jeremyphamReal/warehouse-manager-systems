@@ -3,16 +3,13 @@ package com.jeremy.warehouse.service;
 import com.jeremy.warehouse.models.Product;
 import com.jeremy.warehouse.models.StockTrans.StockTransaction;
 import com.jeremy.warehouse.models.StockTrans.StockTransactionType;
-import com.jeremy.warehouse.models.User;
-import com.jeremy.warehouse.models.UserPrincipal;
+import com.jeremy.warehouse.models.User.User;
 import com.jeremy.warehouse.repository.ProductRepo;
 import com.jeremy.warehouse.repository.StockTransactionRepository;
 import com.jeremy.warehouse.repository.UserRepo;
-import jakarta.persistence.OptimisticLockException;
 import jakarta.transaction.Transactional;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.orm.ObjectOptimisticLockingFailureException;
-import org.springframework.security.core.annotation.AuthenticationPrincipal;
 import org.springframework.stereotype.Service;
 
 @Service

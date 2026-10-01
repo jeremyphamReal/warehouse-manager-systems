@@ -1,7 +1,7 @@
 package com.jeremy.warehouse.service;
 
-import com.jeremy.warehouse.models.User;
-import com.jeremy.warehouse.models.UserPrincipal;
+import com.jeremy.warehouse.models.User.User;
+import com.jeremy.warehouse.models.User.UserPrincipal;
 import com.jeremy.warehouse.repository.UserRepo;
 import org.jspecify.annotations.Nullable;
 import org.springframework.beans.factory.annotation.Autowired;

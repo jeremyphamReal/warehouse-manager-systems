@@ -1,10 +1,9 @@
 package com.jeremy.warehouse.service;
 
-import com.jeremy.warehouse.models.DTO.StockTransactionRequest;
 import com.jeremy.warehouse.models.Product;
 import com.jeremy.warehouse.models.StockTrans.StockTransaction;
 import com.jeremy.warehouse.models.StockTrans.StockTransactionType;
-import com.jeremy.warehouse.models.User;
+import com.jeremy.warehouse.models.User.User;
 import com.jeremy.warehouse.repository.ProductRepo;
 import com.jeremy.warehouse.repository.StockTransactionRepository;
 import com.jeremy.warehouse.repository.UserRepo;
@@ -14,9 +13,7 @@ import org.junit.jupiter.api.extension.ExtendWith;
 import org.mockito.InjectMocks;
 import org.mockito.Mock;
 import org.mockito.junit.jupiter.MockitoExtension;
-import org.springframework.dao.OptimisticLockingFailureException;
 import org.springframework.orm.ObjectOptimisticLockingFailureException;
-import org.springframework.test.context.junit.jupiter.SpringExtension;
 
 import java.util.Optional;
 

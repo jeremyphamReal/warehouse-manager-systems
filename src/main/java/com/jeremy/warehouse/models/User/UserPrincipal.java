@@ -1,4 +1,4 @@
-package com.jeremy.warehouse.models;
+package com.jeremy.warehouse.models.User;
 
 import org.jspecify.annotations.Nullable;
 import org.springframework.security.core.GrantedAuthority;
@@ -18,17 +18,13 @@ public class UserPrincipal implements UserDetails {
 
     @Override
     public Collection<? extends GrantedAuthority> getAuthorities() {
-        String role = user.getRole();
-        if (role == null || role.isBlank()) {
+        Role role = user.getRole();
+        if (role == null) {
             throw new IllegalStateException("Role is missing for user: " + user.getUsername());
         }
 
-        String normalizedRole = role.toUpperCase(Locale.ROOT);
-        if (!normalizedRole.startsWith("ROLE_")) {
-            normalizedRole = "ROLE_" + normalizedRole;
-        }
-
-        return List.of(new SimpleGrantedAuthority(normalizedRole));
+        String authority = "Role_" + role.name();
+        return List.of(new SimpleGrantedAuthority(authority));
     }
 
     public @Nullable Long getId(){return user.getId();}

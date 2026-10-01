@@ -1,6 +1,9 @@
 package com.jeremy.warehouse.controller;
 
-import com.jeremy.warehouse.models.User;
+import com.jeremy.warehouse.models.DTO.UserCreateRequest;
+import com.jeremy.warehouse.models.DTO.UserResponse;
+import com.jeremy.warehouse.models.DTO.UserRoleUpdateRequest;
+import com.jeremy.warehouse.models.User.User;
 import com.jeremy.warehouse.service.UserService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
@@ -19,8 +22,11 @@ public class UserController {
 
     @PostMapping("/register")
     @PreAuthorize("hasRole('ADMIN')")
-    public User register(@RequestBody User user){
-        return userService.save(user);
+//    public User register(@RequestBody User user){
+//        return userService.save(user);
+//    } // hàm cũ
+    public ResponseEntity<UserResponse> createUser(@RequestBody UserCreateRequest userCreateRequest) {
+        return ResponseEntity.ok(userService.createUser(userCreateRequest));
     }
 
     //TODO: Lay Danh sach Staff
@@ -40,8 +46,13 @@ public class UserController {
     //TODO: Update password, role cho 1 staff
     @PutMapping("/update/{id}")
     @PreAuthorize("hasRole('ADMIN')")
-    public ResponseEntity<User> update(@PathVariable Long id, @RequestBody User user) throws Exception {
-        User updatedUser = userService.update(id, user);
-        return new ResponseEntity<>(updatedUser, HttpStatus.OK);
+//    public ResponseEntity<User> update(@PathVariable Long id, @RequestBody User user) throws Exception {
+//        User updatedUser = userService.update(id, user);
+//        return new ResponseEntity<>(updatedUser, HttpStatus.OK);
+//    } // hàm cũ
+    public ResponseEntity<UserResponse> updateUserRole(
+            @PathVariable Long id,
+            @RequestBody UserRoleUpdateRequest request) {
+        return ResponseEntity.ok(userService.updateUserRole(id, request));
     }
 }

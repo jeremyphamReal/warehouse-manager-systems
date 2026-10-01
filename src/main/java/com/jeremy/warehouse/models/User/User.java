@@ -1,4 +1,4 @@
-package com.jeremy.warehouse.models;
+package com.jeremy.warehouse.models.User;
 
 import jakarta.persistence.Entity;
 import jakarta.persistence.Id;
@@ -20,5 +20,5 @@ public class User {
     private Long id;
     private String username;
     private String password;
-    private String role;
+    private Role role;
 }

@@ -1,7 +1,7 @@
 package com.jeremy.warehouse.models.StockTrans;
 
 import com.jeremy.warehouse.models.Product;
-import com.jeremy.warehouse.models.User;
+import com.jeremy.warehouse.models.User.User;
 import jakarta.persistence.*;
 import lombok.*;
 import org.hibernate.annotations.CreationTimestamp;
