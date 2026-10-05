@@ -23,7 +23,7 @@ public class UserPrincipal implements UserDetails {
             throw new IllegalStateException("Role is missing for user: " + user.getUsername());
         }
 
-        String authority = "Role_" + role.name();
+        String authority = "ROLE_" + role.name();
         return List.of(new SimpleGrantedAuthority(authority));
     }
 

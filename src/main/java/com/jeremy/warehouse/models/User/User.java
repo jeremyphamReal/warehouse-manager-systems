@@ -1,8 +1,6 @@
 package com.jeremy.warehouse.models.User;
 
-import jakarta.persistence.Entity;
-import jakarta.persistence.Id;
-import jakarta.persistence.Table;
+import jakarta.persistence.*;
 import lombok.*;
 import org.springframework.stereotype.Component;
 
@@ -20,5 +18,7 @@ public class User {
     private Long id;
     private String username;
     private String password;
+    @Enumerated(EnumType.STRING)
+    @Column(nullable = false)
     private Role role;
 }
