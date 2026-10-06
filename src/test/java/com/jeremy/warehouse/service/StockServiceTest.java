@@ -284,7 +284,7 @@ public class StockServiceTest {
         when(stockTransactionRepository.save(any(StockTransaction.class)))
                 .thenReturn(expectedTx);   // trả về tx thành công ngay lần đầu
 
-        StockTransaction result = stockService.createStockTranscationWithRetry(
+        StockTransaction result = stockService.createStockTransactionWithRetry(
                 productId, StockTransactionType.IN, quantityChange, userId);
 
         Assertions.assertNotNull(result);
@@ -319,7 +319,7 @@ public class StockServiceTest {
 
 
         IllegalStateException exception = Assertions.assertThrows(IllegalStateException.class, () -> {
-            stockService.createStockTranscationWithRetry(productId, StockTransactionType.IN, quantityChange, userId);
+            stockService.createStockTransactionWithRetry(productId, StockTransactionType.IN, quantityChange, userId);
         });
 
         String msg = exception.getMessage();
@@ -355,7 +355,7 @@ public class StockServiceTest {
 
         IllegalStateException exception = Assertions.assertThrows(
                 IllegalStateException.class,
-                () -> stockService.createStockTranscationWithRetry(
+                () -> stockService.createStockTransactionWithRetry(
                         productId, StockTransactionType.OUT, quantityChange, userId)
         );
 
