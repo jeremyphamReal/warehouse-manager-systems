@@ -87,7 +87,7 @@ public class StockService {
         return stockTransactionRepo.save(transaction);
     }
 
-    public StockTransaction createStockTranscationWithRetry(
+    public StockTransaction createStockTransactionWithRetry(
             Long productId, StockTransactionType type, int  quantityChange, Long userId)
     {
         int retryCount = 0;

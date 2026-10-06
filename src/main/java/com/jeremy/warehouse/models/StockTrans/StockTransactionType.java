@@ -1,13 +1,13 @@
 package com.jeremy.warehouse.models.StockTrans;
 
 public enum StockTransactionType {
-    IN("NHAP", "Nhập kho"){
+    IN("IN", "Nhập kho"){
         @Override
         public int calculateQuantity(int current, int change) {
             return current + change;  // Nhập: tăng số lượng
         }
     },
-    OUT("XUAT", "Xuất kho"){
+    OUT("OUT", "Xuất kho"){
         @Override
         public int calculateQuantity(int current, int change) {
             if (current < change) {
