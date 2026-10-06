@@ -6,5 +6,5 @@ public record StockTransactionRequest(
         Long productId,
         Integer quantityChange,
         String note,
-        StockTransactionType stockTransactionType
+        StockTransactionType type
 ) { }
