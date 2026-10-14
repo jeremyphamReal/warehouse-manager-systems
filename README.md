@@ -98,21 +98,42 @@ This two-layer approach protects the same data from two different kinds of concu
 
 ## Screenshots
 
-> _Add screenshots here before sharing this repo — this section is what a recruiter or tech lead will look at first without running the project themselves._
+### Successful Requests
 
 **1. Successful login — JWT issued**
-`[screenshot: Postman POST /api/auth/login response]`
+![Successful login](./screenshots/success/login-auth-success.png)
 
-**2. Creating a stock-out transaction**
-`[screenshot: Postman POST /api/stock/transaction request + response]`
+**2. Creating a category**
+![Create category](./screenshots/success/ceate-category.png)
 
-**3. Rejected stock-out — insufficient inventory (400)**
-`[screenshot: Postman response showing the validation error]`
+**3. Creating a product**
+![Create product](./screenshots/success/create_product.png)
 
-**4. Optimistic lock conflict (409)**
-`[screenshot: Postman response for a version conflict]`
+**4. Creating a new staff account**
+![Create new staff](./screenshots/success/create_new_staff.png)
 
-**5. Unit tests passing — Category, Product, and Stock services (23 tests)**
+**5. Stock-in transaction**
+![Stock-in transaction](./screenshots/success/stock-transaction-IN.png)
+
+### Rejected Requests and Validation
+
+**1. Staff user attempting to access an admin-only endpoint (403)**
+![Forbidden request from staff](./screenshots/failure/fail_403%20error_when_staff_try_call_api_admin.png)
+
+**2. Category cannot be deleted while it is assigned to a product (409)**
+![Category assigned to product](./screenshots/failure/fail_409%20error_when_category_match_with_product.png)
+
+**3. Stock-out request exceeds available inventory (409)**
+![Insufficient inventory](./screenshots/failure/fail_409%20error_when_out_warehouse_not_enough.png)
+
+**4. Creating a category that already exists**
+![Duplicate category](./screenshots/failure/fail_when_category_already_exists.png)
+
+**5. Request references a category that does not exist**
+![Category not found](./screenshots/failure/fail_when_categoryId_not_found.png)
+
+### Unit Tests
+
 ![Unit tests passing](./screenshots/unit-tests-passing.png)
 ---
 
