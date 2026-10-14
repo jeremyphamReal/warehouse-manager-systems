@@ -150,7 +150,7 @@ git clone https://github.com/jeremyphamReal/warehouse-manager-systems.git
 mvn spring-boot:run
 ```
 
-The API will be available at `http://localhost:8080`.
+The API will be available at `http://localhost:9090`.
 
 ---
 
